@@ -1,0 +1,8 @@
+{
+    "type": "mongodb",
+    "url": "mongodb+srv://voxuanan0307:Rq3MDW4xjAHerrvC@cluster0.d4fghjm.mongodb.net/?retryWrites=true&w=majority",
+    "useNewUrlParser": true,
+    "synchronize": true,
+    "logging": true,
+    "entities": ["src/entity/*.*"]
+}
