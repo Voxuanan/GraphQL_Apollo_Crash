@@ -5,8 +5,16 @@ import * as express from "express";
 import { createConnection } from "typeorm";
 import * as session from "express-session";
 import * as cors from "cors";
+import { createServer } from "http";
+import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
+// import { makeExecutableSchema } from "@graphql-tools/schema";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/lib/use/ws";
 
 const main = async () => {
+    const app = express();
+    const httpServer = createServer(app);
+
     await createConnection();
 
     const schema = await buildSchema({
@@ -15,14 +23,35 @@ const main = async () => {
             return !!req.session.userId;
         },
     });
+    const wsServer = new WebSocketServer({
+        server: httpServer,
+        path: "/graphql",
+    });
+    const serverCleanup = useServer({ schema }, wsServer);
 
     const apolloServer = new ApolloServer({
         schema,
         context: ({ req, res }) => ({ req, res }),
+        csrfPrevention: true,
+        cache: "bounded",
+        plugins: [
+            // Proper shutdown for the HTTP server.
+            ApolloServerPluginDrainHttpServer({ httpServer }),
+
+            // Proper shutdown for the WebSocket server.
+            {
+                async serverWillStart() {
+                    return {
+                        async drainServer() {
+                            await serverCleanup.dispose();
+                        },
+                    };
+                },
+            },
+        ],
     });
     await apolloServer.start();
 
-    const app = express();
     app.use(
         cors({
             credentials: true,
@@ -47,7 +76,7 @@ const main = async () => {
         app,
         cors: { credentials: true, origin: "https://studio.apollographql.com" },
     });
-    app.listen(4000, () => {
+    httpServer.listen(4000, () => {
         console.log("Sever started on http://localhost:4000/graphql");
     });
 };

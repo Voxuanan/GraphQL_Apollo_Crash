@@ -11,18 +11,22 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@graphql-tools/schema": "^8.5.0",
         "@types/bcryptjs": "^2.4.2",
+        "apollo-server-core": "^3.10.0",
         "apollo-server-express": "^3.10.0",
         "bcryptjs": "^2.4.3",
         "cors": "^2.8.5",
         "express": "^4.16.4",
         "express-session": "^1.17.3",
         "graphql": "^14.0.2",
+        "graphql-ws": "^5.9.1",
         "mongodb": "^4.8.0",
         "pg": "^7.7.1",
         "reflect-metadata": "^0.1.12",
         "type-graphql": "^0.16.0",
-        "typeorm": "^0.2.11"
+        "typeorm": "^0.2.11",
+        "ws": "^8.8.1"
     },
     "devDependencies": {
         "@types/cors": "^2.8.12",
@@ -30,6 +34,7 @@
         "@types/express-session": "^1.17.5",
         "@types/graphql": "^14.0.4",
         "@types/node": "^10.12.18",
+        "@types/ws": "^8.5.3",
         "nodemon": "^1.18.9",
         "ts-node": "^7.0.1",
         "typescript": "^3.2.2"
